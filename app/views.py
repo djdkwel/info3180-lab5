@@ -28,7 +28,11 @@ def about():
     """Render the website's about page."""
     return render_template('about.html')
 
-
+@app.route('/secure_page')
+@login_required
+def secure_page():
+    return render_template('secure_page.html')
+    
 @app.route("/login", methods=["GET", "POST"])
 def login():
    
@@ -65,6 +69,13 @@ def login():
 
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'danger')
+    return redirect(url_for('home'))
+    
 @login_manager.user_loader
 def load_user(id):
     return UserProfile.query.get(int(id))
